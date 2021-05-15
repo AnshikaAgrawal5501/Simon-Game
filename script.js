@@ -4,33 +4,6 @@ let userClickedPattern = [];
 let level = 0;
 let start = false;
 
-function nextSequence() {
-    level++;
-    $("h1").text(`Level ${level}`);
-
-    let randomNumber = Math.floor(Math.random() * 4);
-    const randomChosenColor = buttonColors[randomNumber];
-
-    gamePattern.push(randomChosenColor);
-
-    playSound(randomChosenColor);
-    animatePress(randomChosenColor);
-
-    userClickedPattern = [];
-}
-
-$(".btn").click(handlerFunction);
-
-function handlerFunction() {
-    let userChosenColor = this.id;
-    userClickedPattern.push(userChosenColor);
-
-    checkAnswer(userClickedPattern.length - 1);
-
-    playSound(userChosenColor);
-    animatePress(userChosenColor);
-}
-
 function playSound(sound) {
     let audio = new Audio(`sounds/${sound}.mp3`);
     audio.play();
@@ -44,25 +17,19 @@ function animatePress(currentColor) {
     }, 100);
 }
 
-$(document).keypress(function() {
-    if (start === false) {
-        start = true;
-        nextSequence();
-    }
-});
+function nextSequence() {
+    level++;
+    $("h1").text(`Level ${level}`);
 
-function checkAnswer(index) {
+    let randomNumber = Math.floor(Math.random() * 4);
+    const randomChosenColor = buttonColors[randomNumber];
 
-    if (gamePattern[index] === userClickedPattern[index]) {
-        if (index === level - 1) {
-            setTimeout(nextSequence, 1000);
-        }
+    gamePattern.push(randomChosenColor);
 
-    } else {
+    playSound(randomChosenColor);
+    animatePress(randomChosenColor);
 
-
-        startOver();
-    }
+    userClickedPattern = [];
 }
 
 function startOver() {
@@ -80,3 +47,33 @@ function startOver() {
         $("body").removeClass("game-over");
     }, 200);
 }
+
+function checkAnswer(index) {
+
+    if (gamePattern[index] === userClickedPattern[index]) {
+        if (index === level - 1) {
+            setTimeout(nextSequence, 1000);
+        }
+    } else {
+        startOver();
+    }
+}
+
+$(".btn").click(handlerFunction);
+
+function handlerFunction() {
+    let userChosenColor = this.id;
+    userClickedPattern.push(userChosenColor);
+
+    checkAnswer(userClickedPattern.length - 1);
+
+    playSound(userChosenColor);
+    animatePress(userChosenColor);
+}
+
+$(document).keypress(function() {
+    if (start === false) {
+        start = true;
+        nextSequence();
+    }
+});
